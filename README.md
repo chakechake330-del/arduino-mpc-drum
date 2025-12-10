@@ -7,7 +7,7 @@
 - **キーパッドで音を鳴らす**  
   自作キーパッドを押すと、PCの音楽制作ソフト（Logic Pro）に信号を送り、ドラム音や効果音などのサンプルを再生する
 
-- **Logic Proとの連携による高音質な音声再生**  
+- **Logic Proとの連携による音声再生**  
   ArduinoからのMIDI信号をLogic Proで受信し、ソフトウェア音源を鳴らす
 
 - **FFT解析（PC側）**  
@@ -16,7 +16,7 @@
 - **WS2812B LEDマトリクスによるビジュアライザー表示**  
   PCで解析した音の強さや周波数に応じて、8×32のLEDマトリクスにスペクトラムアナライザを表示する
 
-- **Arduino Uno R4 WiFiによる統合制御**  
+- **Arduino Uno R4 WiFiによる制御**  
   MIDI信号の送信、LED制御、キーパッド処理を1つのマイコンで実現する
 
 ## 2. 仕様書
@@ -57,5 +57,5 @@ flowchart TD
 ## 参考
 
 - [【Arduino】シリアルLED（WS2812B）を制御する](https://araisun.com/arduino-serial-led.html)
-- [ArduinoでAD入力値をFFTしてスペクトル分析＆表示をするチャレンジ](https://qiita.com/moppii/items/e5fb2407f4bae3e95c4a)
+- [ArduinoでFFT解析し、ピークの周波数を検出する](https://qiita.com/ricelectric/items/98a6d32b1bcfca598762)
 - [ErriezTM1637ライブラリ](https://github.com/Erriez/ErriezTM1637)
