@@ -38,18 +38,22 @@
 ## 3. フローチャート
 
 ```mermaid
-graph TD
-  A[電源ON] --> B[初期化処理]
-  B --> C[DFPlayerを初期化]
-  C --> D[LEDマトリクスを初期化]
-  D --> E[キーパッドの入力を待つ]
-  E --> F[キーが押された]
-  F -->|いいえ| E
-  F -->|はい| G[対応する音声ファイルを再生]
-  G --> H[LEDマトリクスにスペクトラムアナライザ表示]
-  H --> E
-```
+flowchart TD
+    A[起動] --> B[キーパッド初期化]
+    B --> C[LEDマトリクス初期化]
+    C --> D[シリアル通信開始]
+    D --> E[loop開始]
 
+    E --> F{キーパッドが押された？}
+    F -- Yes --> G[MIDIノートを送信]
+    F -- No --> H[何もしない]
+
+    G --> I[シリアルからFFTデータを受信]
+    H --> I
+
+    I --> J[FFTデータをLEDマトリクスに表示]
+    J --> E
+```
 ## 参考
 
 - [【Arduino】シリアルLED（WS2812B）を制御する](https://araisun.com/arduino-serial-led.html)
