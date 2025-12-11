@@ -61,3 +61,4 @@ flowchart TD
 - [【Arduino】シリアルLED（WS2812B）を制御する](https://araisun.com/arduino-serial-led.html)
 - [ArduinoでFFT解析し、ピークの周波数を検出する](https://qiita.com/ricelectric/items/98a6d32b1bcfca598762)
 - [ErriezTM1637ライブラリ](https://github.com/Erriez/ErriezTM1637)
+- [arduinoとprocessingの連携手順](https://note.com/nakariho/n/n92611b3c0046)
