@@ -36,6 +36,22 @@
 | Arduino Uno R4 WiFi       | 全体制御（MIDI送信・LED制御・入力処理） | -                                    |
 | PC（Logic Pro + FFT解析）            | 音声再生・FFT解析・LED表示データ送信      | USBシリアル通信                      |
 
+### 使用ツール・環境
+
+- **Arduino IDE**（統合開発環境 / マイコン用コードの開発・書き込み）
+- **Processing**（ビジュアルプログラミング環境 / 音声解析とシリアル通信）
+- **Logic Pro X**（DAW / 音声出力・ドラム音源の再生）
+- **BlackHole**（仮想オーディオルーティング / ProcessingでLogic Proの音を取得）
+
+### Arduino使用ライブラリ
+
+- **Adafruit_NeoPixel**（LEDマトリクス制御用ライブラリ）
+- **ErriezTM1637**（TM1637搭載キーパッドの読み取り用ライブラリ）
+
+### Processing使用ライブラリ
+
+- **processing.sound**（音声入力とFFT解析用）
+- **processing.serial**（Arduinoとのシリアル通信）
 
 ## 3. フローチャート
 
