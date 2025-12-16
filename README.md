@@ -95,7 +95,23 @@ flowchart TD
     I --> J[FFTデータをLEDマトリクスに表示]
     J --> E
 ```
-## 参考
+
+## 4. 使用ツールの詳細・公式サイト
+
+### **Processing**（https://processing.org/）  
+Processingは、ビジュアル表現に特化したJavaベースのプログラミング環境です。 このプロジェクトでは、Logic Proで再生された音声をリアルタイムに解析し、周波数ごとの強さを可視化する役割を担っています。 また、解析したデータをArduinoに送信し、LEDマトリクスに音のスペクトラムを表示するための橋渡し的存在でもあります。
+
+### **BlackHole**（https://existential.audio/blackhole/）  
+BlackHoleは、macOS用の仮想オーディオドライバです。  
+通常、アプリの音声はスピーカーに直接送られますが、BlackHoleを使うことで、**その音声を別のアプリ（この場合はProcessing）に受け渡すことができます。**  
+このプロジェクトでは、**Logic Proで鳴った音をProcessingに届ける“音の受け渡し役”としてBlackHoleを使用しています。**
+
+
+### **Audio MIDI設定（IACドライバ）**（macOS標準機能）  
+仮想MIDIポートを作成・管理するためのmacOS標準ツール。Hairless MIDIとLogic Proを接続するために使用。
+
+
+## 5. 参考サイト
 
 - [【Arduino】シリアルLED（WS2812B）を制御する](https://araisun.com/arduino-serial-led.html)
 - [ArduinoでFFT解析し、ピークの周波数を検出する](https://qiita.com/ricelectric/items/98a6d32b1bcfca598762)
