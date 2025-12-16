@@ -4,20 +4,28 @@
 
 ### *主な機能*
 
-- **キーパッドで音を鳴らす**  
+- **キーパッド**  
   自作キーパッドを押すと、PCの音楽制作ソフト（Logic Pro）に信号を送り、ドラム音や効果音などのサンプルを再生する
 
-- **Logic Proとの連携による音声再生**  
+- **Logic Pro**  
   ArduinoからのMIDI信号をLogic Proで受信し、ソフトウェア音源を鳴らす
 
 - **FFT解析（PC側）**  
   Logic Proの音声出力をPCで取得し、リアルタイムFFT解析を実行する
 
-- **WS2812B LEDマトリクスによるビジュアライザー表示**  
+- **WS2812B LEDマトリクス**  
   PCで解析した音の強さや周波数に応じて、8×32のLEDマトリクスにスペクトラムアナライザを表示する
 
-- **Arduino Uno R4 WiFiによる制御**  
+- **Arduino Uno R4 WiFi**  
   MIDI信号の送信、LED制御、キーパッド処理を1つのマイコンで実現する
+
+### *システム構成*
+
+1. Arduino Uno R4 WiFi でキーパッド入力を検出し、MIDI信号をUSB経由で送信
+2. Pythonスクリプトでシリアルデータを受信し、仮想MIDIポート（IAC Driver）に送信
+3. Logic Pro  が IAC Driver からMIDIを受信し、ソフト音源を再生
+4. Logic Pro の音声出力を BlackHole 経由で Processing に渡す
+5. Processing でFFT解析を行い、LEDマトリクスにスペクトラム表示
 
 ## 2. 仕様書
 
@@ -46,7 +54,7 @@
 
 - **Arduino IDE**（統合開発環境 / マイコン用コードの開発・書き込み）
 - **Processing**（ビジュアルプログラミング環境 / 音声解析とシリアル通信）
-- **Logic Pro X**（DAW / 音声出力・ドラム音源の再生）
+- **Logic Pro**（DAW / 音声出力・ドラム音源の再生）
 - **BlackHole**（仮想オーディオルーティング / ProcessingでLogic Proの音を取得）
 - **Audio MIDI設定（IACドライバ）**（Mac標準 / 仮想MIDIポートの作成・接続）
 
