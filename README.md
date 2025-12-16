@@ -54,9 +54,11 @@
 
 - **Arduino IDE**（統合開発環境 / マイコン用コードの開発・書き込み）
 - **Processing**（ビジュアルプログラミング環境 / 音声解析とシリアル通信）
+- **Python**（Arduinoからのシリアルデータを受信し、MIDI信号に変換してLogic Proへ送信）
 - **Logic Pro**（DAW / 音声出力・ドラム音源の再生）
 - **BlackHole**（仮想オーディオルーティング / ProcessingでLogic Proの音を取得）
 - **Audio MIDI設定（IACドライバ）**（Mac標準 / 仮想MIDIポートの作成・接続）
+
 
 ### Arduino使用ライブラリ
 
@@ -67,6 +69,12 @@
 
 - **processing.sound**（音声入力とFFT解析用）
 - **processing.serial**（Arduinoとのシリアル通信）
+
+### Python使用ライブラリ
+
+- **pyserial**（Arduinoからのシリアルデータを受信）
+- **mido**（MIDIメッセージの作成と管理）
+- **python-rtmidi**（作成したMIDIメッセージをIAC Driverに送信）
 
 ## 3. フローチャート
 
