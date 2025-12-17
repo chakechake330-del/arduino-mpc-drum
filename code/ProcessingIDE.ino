@@ -1,54 +1,42 @@
-import ddf.minim.*;
-import ddf.minim.analysis.*;
+import processing.sound.*;
 import processing.serial.*;
 
-Minim minim;
-AudioInput in;
 FFT fft;
-
+AudioIn in;
 Serial myPort;
 
-int bands = 32;
-int[] spectrumData = new int[bands];
+int bands = 8;
+int[] levels = new int[bands];
 
 void setup() {
-  size(512, 200);
-  
+  size(600, 400);
   printArray(Serial.list());
-  myPort = new Serial(this, Serial.list()[5], 115200);  // ← ポート番号は要確認！
+  String portName = Serial.list()[5];  // 必要に応じてポート番号を変更！
+  myPort = new Serial(this, portName, 115200);
 
-  minim = new Minim(this);
-  in = minim.getLineIn(Minim.MONO, 512);
-  fft = new FFT(in.bufferSize(), in.sampleRate());
+  fft = new FFT(this, bands);
+  in = new AudioIn(this, 0);
+  in.start();
+  fft.input(in);
 }
 
 void draw() {
   background(0);
-  
-  fft.forward(in.mix);
+  fft.analyze();
 
+  String data = "L:";
   for (int i = 0; i < bands; i++) {
-    int start = i * (fft.specSize() / bands);
-    int end = (i + 1) * (fft.specSize() / bands);
-    float sum = 0;
-    for (int j = start; j < end; j++) {
-      sum += fft.getBand(j);
-    }
-    float avg = sum / (end - start);
-    spectrumData[i] = int(map(avg, 0, 50, 0, 255));
-    spectrumData[i] = constrain(spectrumData[i], 0, 255);
-
-    // 可視化
-    float barWidth = width / float(bands);
-    fill(255);
-    rect(i * barWidth, height, barWidth - 2, -spectrumData[i]);
+    float level = fft.spectrum[i];
+    int brightness = int(constrain(level * 5000, 0, 255));
+    levels[i] = brightness;
+    data += brightness;
+    if (i < bands - 1) data += ",";
   }
+    myPort.write(data + "\n");
 
-  // Arduinoに送信
-  String out = "L";
+  // デバッグ用ビジュアライザ
   for (int i = 0; i < bands; i++) {
-    out += "," + spectrumData[i];
+    fill(levels[i], 255, 255);
+    rect(i * (width / bands), height, width / bands, -levels[i]);
   }
-  out += "\n";
-  myPort.write(out);
 }
