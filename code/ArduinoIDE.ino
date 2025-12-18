@@ -74,7 +74,9 @@ void processInput(String data) {
   }
 
   for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = CHSV(160, 255, values[i]);  // 色は青系、必要に応じて変更
+    int row = i % 8;  // 縦方向（周波数帯）
+    uint8_t hue = map(row, 0, 7, 0, 160);  // 赤〜青のグラデーション
+    leds[i] = CHSV(hue, 255, values[i]);
   }
   FastLED.show();
 }
