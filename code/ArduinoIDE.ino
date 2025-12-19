@@ -3,8 +3,8 @@
 #define NUM_LEDS 256       // LEDの総数（8x32マトリクス）
 #define DATA_PIN 6         // LEDデータピンの番号
 
-#define TRIG_PIN 9         // 超音波センサーのトリガーピン
-#define ECHO_PIN 10        // 超音波センサーのエコーピン
+#define TRIG_PIN 10         // 超音波センサーのトリガーピン
+#define ECHO_PIN 9        // 超音波センサーのエコーピン
 
 CRGB leds[NUM_LEDS];       // LEDの配列を定義
 
