@@ -1,11 +1,11 @@
 # 卒業制作2025
 ## 1. 概要 
-超音波モジュール + DAW(Logic Pro) + RGB LEDマトリクスを使ったエアー楽器
+  超音波センサー × Logic Pro × LEDマトリクスで構成された、 手の動きで音を奏で、音に合わせてLEDが光る“エアー楽器”です。  
 
 ### *主な機能*
 
 - **超音波モジュール**  
-  センサーの前に手をかざすと、距離に応じて異なるMIDIノートを生成し、Logic Proでドラム音や効果音を再生する
+  センサーの前に手をかざすと、距離に応じたMIDIノートを生成し、Logic Proでドラム音や効果音を再生します。
 　
 - **Logic Pro**  
   ArduinoからのMIDI信号をLogic Proで受信し、ソフトウェア音源を鳴らす
@@ -14,17 +14,17 @@
   Logic Proの音声出力をPCで取得し、リアルタイムFFT解析を実行する
 
 - **WS2812B LEDマトリクス**  
-  PCで解析した音の強さや周波数に応じて、8×32のLEDマトリクスにスペクトラムアナライザを表示する
+  解析結果に基づき、8×32のLEDマトリクスにスペクトラムアナライザを表示します。
 
 - **Arduino Uno R4 WiFi**  
-  MIDI信号の送信、LED制御を1つのマイコンで実現する
+  超音波センサーの読み取り、MIDIノートの送信、LED制御を1台で実行します。
 
 ### *システム構成*
 
-1. Arduino Uno R4 WiFi で超音波センサーの距離を測定し、MIDI信号をUSB経由で送信
-2. Logic Pro  が IAC Driver からMIDIを受信し、ソフト音源を再生
-3. Logic Pro の音声出力を BlackHole 経由で Processing に渡す
-4. Processing でFFT解析を行い、LEDマトリクスにスペクトラム表示
+1.  Arduino Uno R4 WiFi が超音波センサーで距離を測定し、MIDIノートをUSB経由で送信
+2.  Logic Pro が IAC Driver 経由でMIDIを受信し、ソフト音源を再生
+3.  Logic Proの音声出力 を BlackHole 経由で Processing に渡す
+4.  Processing がFFT解析を行い、LEDマトリクスにスペクトラムを表示
 
 ## 2. 仕様書
 
@@ -41,29 +41,30 @@
 ### *使用モジュールとピン*
 
 
-| モジュール名              | 用途                                | 使用ピン（Arduino Uno R4 WiFi）     |
+| モジュール名                 | 用途                                | 使用ピン（Arduino Uno R4 WiFi）  |
 |---------------------------|-------------------------------------|------------------------------|
 | 超音波距離センサー（HC-SR04など） | 手の距離を測定し、MIDIノートを決定        |      TRIG: D10 / ECHO: D9    |
-| WS2812B LEDマトリクス（8×32） | スペクトラムアナライザ表示                | データピン: D6                  |
-| Arduino Uno R4 WiFi       | 全体制御（MIDI送信・LED制御・入力処理）     | -                             |
-| PC（Logic Pro + FFT解析）       | 音声再生・FFT解析・LED表示データ送信    | USBシリアル通信                  |
+| WS2812B LEDマトリクス（8×32）  | スペクトラムアナライザ表示               | データピン: D6                  |
+| Arduino Uno R4 WiFi         | 全体制御（MIDI送信・LED制御））         | -                             |
+| PC（Logic Pro + Processing）     | 音声再生・FFT解析・LED制御         | USBシリアル通信                  |
 
 ### 使用ツール・環境
 
 - **Arduino IDE**（統合開発環境 / マイコン用コードの開発・書き込み）
-- **Processing**（ビジュアルプログラミング環境 / 音声解析とシリアル通信）
-- **Logic Pro**（DAW / 音声出力・ドラム音源の再生）
+- **Processing**（ビジュアルプログラミング環境 / 音声解析・シリアル通信・LED制御）
+- **Logic Pro**（DAW / MIDI受信と音声出力）
 - **BlackHole**（仮想オーディオルーティング / ProcessingでLogic Proの音を取得）
 - **Audio MIDI設定（IACドライバ）**（Mac標準 / 仮想MIDIポートの作成・接続）
 
 ### Arduino使用ライブラリ
 
-- **Adafruit_NeoPixel**（LEDマトリクス制御用ライブラリ）
+- **FastLED**(WS2812B LEDマトリクス制御用ライブラリ)
 
 ### Processing使用ライブラリ
 
-- **processing.sound**（音声入力とFFT解析用）
-- **processing.serial**（Arduinoとのシリアル通信）
+- **Minim**(音声入力とFFT解析用ライブラリ)
+- **TheMidiBus**(MIDIノート送信用ライブラリ)
+- **processing.serial**(Arduinoとのシリアル通信)
 
 ## 3. フローチャート
 
@@ -74,14 +75,14 @@ flowchart TD
     C --> D[シリアル通信開始]
     D --> E[loop開始]
 
-    E --> F{手が検出された？}
-    F -- Yes --> G[距離に応じてMIDIノートを送信]
+    E --> F{手の動きあり？}
+    F -- Yes --> G[距離に応じてMIDIノート送信]
     F -- No --> H[何もしない]
 
-    G --> I[シリアルからFFTデータを受信]
+    G --> I[FFTデータを受信]
     H --> I
 
-    I --> J[FFTデータをLEDマトリクスに表示]
+    I --> J[LEDマトリクスにスペクトラム表示]
     J --> E
 
 ```
@@ -89,7 +90,9 @@ flowchart TD
 ## 4. 使用ツールの詳細
 
 ### **Processing** 
-Processingは、ビジュアル表現に特化したJavaベースのプログラミング環境です。 このプロジェクトでは、Logic Proで再生された音声をリアルタイムに解析し、周波数ごとの強さを可視化する役割を担っています。 また、解析したデータをArduinoに送信し、LEDマトリクスに音のスペクトラムを表示するための橋渡し的存在でもあります。
+Javaベースのビジュアルプログラミング環境。 
+このプロジェクトでは、Logic Proの音声をリアルタイムにFFT解析し、LEDマトリクスにスペクトラム表示する役割を担います。 
+また、Arduinoとのシリアル通信を通じて、LED制御データを送信します。
 
 ### **BlackHole**  
 BlackHoleは、macOS用の仮想オーディオドライバです。  
@@ -97,8 +100,8 @@ BlackHoleは、macOS用の仮想オーディオドライバです。
 このプロジェクトでは、Logic Proで鳴った音をProcessingに届ける“音の受け渡し役”としてBlackHoleを使用しています。
 
 ### **Audio MIDI設定（IACドライバ）**（macOS標準機能）  
-仮想MIDIポートを作成・管理するためのmacOS標準ツールです。Hairless MIDIとLogic Proを接続するために使用しています。
-
+macOS標準のMIDIルーティングツール。 
+ArduinoからのMIDIノートをLogic Proに送信するための仮想MIDIポートを作成します。
 
 ## 5. 参考サイト
 
