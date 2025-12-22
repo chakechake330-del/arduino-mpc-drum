@@ -3,7 +3,7 @@
   超音波センサー × Logic Pro × LEDマトリクスで構成された、 手の動きで音を奏で、音に合わせてLEDが光る **エアー楽器**  
 
 ## 2.  デモ動画
-![Demo](https://img.youtube.com/vi/6xDUZv_bAYo/0.jpg)](https://youtu.be/6xDUZv_bAYo)
+![Demo](https://img.youtube.com/vi/6xDUZv_bAYo/0.jpg)
 
 ### *主な機能*
 
