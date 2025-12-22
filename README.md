@@ -2,7 +2,7 @@
 ## 1.  概要 
   超音波センサー × Logic Pro × LEDマトリクスで構成された、 手の動きで音を奏で、音に合わせてLEDが光る **エアー楽器**  
 
-[![Demo](https://img.youtube.com/vi/44h90E0diM4/0.jpg)](https://www.youtube.com/watch?v=44h90E0diM4)
+[![Demo](images_and_videos/thumbnail.jpg)](https://chakechake330-del.github.io/arduino_air_musical_instrument/)
 
 ### *主な機能*
 
