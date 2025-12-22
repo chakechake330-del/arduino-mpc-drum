@@ -1,6 +1,8 @@
 # 卒業制作2025
 ## 1.  概要 
-  超音波センサー × Logic Pro × LEDマトリクスで構成された、 手の動きで音を奏で、音に合わせてLEDが光る **エアー楽器**   
+  超音波センサー × Logic Pro × LEDマトリクスで構成された、 手の動きで音を奏で、音に合わせてLEDが光る **エアー楽器**  
+
+  [Arduino Air Musical Instrument ](https://chakechake330-del.github.io/arduino_air_musical_instrument/)
 
 ### *主な機能*
 
