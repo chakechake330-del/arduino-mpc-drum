@@ -1,84 +1,97 @@
-#include <FastLED.h>  // LED制御ライブラリをインクルード
+#include <Adafruit_NeoPixel.h>
 
-#define NUM_LEDS 256       // LEDの総数（8x32マトリクス）
-#define DATA_PIN 6         // LEDデータピンの番号
+const int numBands = 16;
+const int matrixWidth = 32;
+const int matrixHeight = 8;
+const int numPixels = matrixWidth * matrixHeight;
+const int dataPin = 6;
+const int trigPin = 9;
+const int echoPin = 10;
 
-#define TRIG_PIN 10         // 超音波センサーのトリガーピン
-#define ECHO_PIN 9        // 超音波センサーのエコーピン
-
-CRGB leds[NUM_LEDS];       // LEDの配列を定義
-
-String inputString = "";   // シリアル受信用の文字列バッファ
-bool receiving = false;    // データ受信中かどうかのフラグ
+Adafruit_NeoPixel strip(numPixels, dataPin, NEO_GRB + NEO_KHZ800);
+byte bands[numBands];
+int peaks[numBands];
 
 void setup() {
-  Serial.begin(115200);  // シリアル通信を初期化（Processingと通信）
-  FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds, NUM_LEDS);  // LEDの初期化（WS2812）
-  FastLED.clear();       // LEDをすべてオフに
-  FastLED.show();        // LEDの状態を反映
+  Serial.begin(115200);
+  strip.begin();
+  strip.setBrightness(100);
+  strip.show();
 
-  pinMode(TRIG_PIN, OUTPUT);  // トリガーピンを出力に設定
-  pinMode(ECHO_PIN, INPUT);   // エコーピンを入力に設定
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  for (int i = 0; i < numBands; i++) peaks[i] = 0;
 }
 
 void loop() {
-  sendDistance();     // 超音波センサーで距離を測定して送信
-  receiveLEDData();   // ProcessingからのLEDデータを受信
-  delay(30);          // 少し待機（30ms）
-}
-
-void sendDistance() {
-  digitalWrite(TRIG_PIN, LOW);       // トリガーをLOWにしてリセット
-  delayMicroseconds(2);              // 少し待つ
-  digitalWrite(TRIG_PIN, HIGH);      // トリガーをHIGHにして超音波を発射
-  delayMicroseconds(10);             // 10マイクロ秒間発射
-  digitalWrite(TRIG_PIN, LOW);       // トリガーを再びLOWに
-
-  long duration = pulseIn(ECHO_PIN, HIGH, 20000);  // エコーの戻り時間を取得（最大20ms）
-  float distance = duration * 0.034 / 2.0;         // 距離に変換（cm）
-
-  if (distance > 2 && distance < 400) {
-    Serial.println(distance);  // 有効な距離ならProcessingに送信
+  // --- 1. 超音波センサー測定 ---
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  // タイムアウト設定でフリーズを防止
+  long duration = pulseIn(echoPin, HIGH, 25000); 
+  float distance = duration * 0.034 / 2.0;
+  
+  // 距離を送信（MIDI制御用）
+  if (distance > 0) {
+    Serial.println(distance);
   }
-}
 
-void receiveLEDData() {
-  while (Serial.available()) {             // シリアルにデータがある間ループ
-    char inChar = (char)Serial.read();     // 1文字読み込み
-    if (inChar == '\n') {                  // 改行が来たら1行の終わり
-      processInput(inputString);           // 入力データを処理
-      inputString = "";                    // バッファをリセット
-      receiving = false;                   // 受信終了
-    } else {
-      inputString += inChar;               // バッファに文字を追加
-      receiving = true;                    // 受信中フラグを立てる
-    }
-  }
-}
-
-void processInput(String data) {
-  if (data.charAt(0) != 'L') return;  // 'L'で始まらないデータは無視
-
-  int values[NUM_LEDS];               // 明るさデータを格納する配列
-  int index = 0;
-  int lastComma = 0;
-
-  // カンマ区切りの数値をパースして配列に格納
-  for (int i = 2; i < data.length(); i++) {
-    if (data.charAt(i) == ',' || i == data.length() - 1) {
-      String numStr = data.substring(lastComma + 1, (data.charAt(i) == ',') ? i : i + 1);
-      values[index] = numStr.toInt();  // 数値に変換して格納
-      index++;
-      lastComma = i;
-      if (index >= NUM_LEDS) break;    // LED数を超えたら終了
+  // --- 2. JavaからのFFTデータ受信（ヘッダー同期型） ---
+  // 0xFF (1byte) + 16bands (16bytes) = 17bytes 以上の時に処理
+  while (Serial.available() > numBands) {
+    if (Serial.read() == 0xFF) { // ヘッダー発見
+      Serial.readBytes(bands, numBands); // まとめて読み込む
+      
+      // LED表示更新
+      updateDisplay();
+      break; // 最新のデータのみを処理して抜ける
     }
   }
 
-  // 各LEDに色と明るさを設定
-  for (int i = 0; i < NUM_LEDS; i++) {
-    int row = i % 8;  // 縦方向の位置（周波数帯）
-    uint8_t hue = map(row, 0, 7, 0, 160);  // 色相を赤〜青にマッピング
-    leds[i] = CHSV(hue, 255, values[i]);  // HSVで色と明るさを設定
+  // 100msだとMIDIの反応が遅いため、30ms程度に短縮するのがおすすめ
+  delay(30); 
+}
+
+void updateDisplay() {
+  strip.clear();
+  for (int x = 0; x < numBands; x++) {
+    int value = bands[x];
+    int height = map(value, 0, 255, 0, matrixHeight);
+
+    // ピーク更新
+    if (height > peaks[x]) peaks[x] = height;
+    else if (peaks[x] > 0) peaks[x]--;
+
+    // 縦棒の描画
+    int hue = map(x, 0, numBands - 1, 0, 65535);
+    int baseX = x * 2;
+    for (int y = 0; y < height; y++) {
+      int brightness = map(y, 0, matrixHeight - 1, 100, 255);
+      uint32_t color = strip.ColorHSV(hue, 255, brightness);
+      
+      for (int dx = 0; dx < 2; dx++) {
+        strip.setPixelColor(getPixelIndex(baseX + dx, matrixHeight - 1 - y), color);
+      }
+    }
+
+    // ピーク点（赤）
+    if (peaks[x] > 0) {
+      int peakY = matrixHeight - 1 - peaks[x];
+      for (int dx = 0; dx < 2; dx++) {
+        strip.setPixelColor(getPixelIndex(baseX + dx, peakY), strip.Color(255, 0, 0));
+      }
+    }
   }
-  FastLED.show();  // LEDに反映
+  strip.show();
+}
+
+int getPixelIndex(int x, int y) {
+  if (x < 0 || x >= matrixWidth || y < 0 || y >= matrixHeight) return 0;
+  if (y % 2 == 0) return y * matrixWidth + x;
+  else return y * matrixWidth + (matrixWidth - 1 - x);
 }
