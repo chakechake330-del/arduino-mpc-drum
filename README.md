@@ -78,7 +78,10 @@
 - **TheMidiBus**(Processingを仮想的なMIDIキーボードとして動作させるために使用しています)
 - **processing.serial**(Arduinoとのシリアル通信用ライブラリ)
 
-## 4.  フローチャート
+## 4.  システムブロック図
+![ブロック図](images_and_videos/mermaid-diagram-2025-12-22-172352.png)
+
+## 5.  フローチャート
 
 ###  *[MIDI楽器コントローラ(Arduino側)]*
 
@@ -123,7 +126,7 @@ flowchart TD
 ```
 
 
-## 5.  使用ツールの詳細
+## 6.  使用ツールの詳細
 
 ### 🔹**Processing** 
 Javaベースのビジュアルプログラミング環境。   
@@ -140,7 +143,7 @@ macOS標準のMIDIルーティングツール。
 ArduinoからのMIDIノートをLogic Proに送信するための仮想MIDIポートを作成します。
 
 
-## 6.  工夫ポイント
+## 7.  工夫ポイント
 
 ### ◎*ArduinoとProcessingのリアルタイムやりとり*  
 ArduinoとProcessingの間で、
@@ -157,7 +160,7 @@ Logic Proで再生された音をBlackHoleを使ってProcessingに取り込み�
 これにより、意図しない連打やノイズを防ぎ、自然な演奏感を保っています。
 
 
-## 7.  参考サイト
+## 8.  参考サイト
 
 - [基本プロジェクト 超音波](https://docs.sunfounder.com/projects/elite-explorer-kit/ja/latest/basic_projects/06_basic_ultrasonic_sensor.html)
 - [【Arduino】シリアルLED（WS2812B）を制御する](https://araisun.com/arduino-serial-led.html)
