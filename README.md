@@ -87,7 +87,7 @@
 | **FFT（JTransforms等）** | 外部または自作 | **FFT解析**<br>音声をリアルタイムで周波数解析し、スペクトラム情報を取得。 |
 
 ## 4.  システムブロック図
-![ブロック図](images_and_videos/mermaid-diagram-2025-12-22-172352.png)
+![ブロック図](images_and_videos/mermaid-diagram-2025-12-25-113710.png)
 
 ## 5.  フローチャート
 
