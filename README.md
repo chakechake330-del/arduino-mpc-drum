@@ -57,7 +57,7 @@
 
 ### *回路図*
 
-![回路図](images_and_videos/arduino_回路図.png)
+![回路図](images_and_videos/Arduino_midi_回路図.png)
 
 ### *使用モジュールとピン*
 
