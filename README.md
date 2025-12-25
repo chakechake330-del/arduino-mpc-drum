@@ -181,6 +181,8 @@ flowchart TD
 ### 🔹 IntelliJ IDEA
 Javaを用いて、Arduinoから届くデータの解析や、Logic Proへ送るMIDI信号の生成、さらに音声をリアルタイムで分析するFFT処理など、システム全体の中心的な計算を行っています。
 
+![デモ画面](images_and_videos/IntelliJ_IDEA.png)
+
 ### 🔹 BlackHole
 macOS用の仮想オーディオドライバです。通常、アプリの音声はスピーカーへ送られますが、BlackHoleを経由させることで、Logic Proの音声をリアルタイムでIntelliJに取り込むことができます。
 
