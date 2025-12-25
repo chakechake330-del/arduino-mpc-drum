@@ -6,8 +6,8 @@ const int matrixWidth = 32;    // LEDパネルの横幅
 const int matrixHeight = 8;    // LEDパネルの高さ
 const int numPixels = matrixWidth * matrixHeight; // LEDの総数（32x8=256個）
 const int dataPin = 6;         // LEDを制御する信号を送るピン番号
-const int trigPin = 9;         // 超音波センサーの送信ピン
-const int echoPin = 10;        // 超音波センサーの受信ピン
+const int trigPin = 10;         // 超音波センサーの送信ピン
+const int echoPin = 9;        // 超音波センサーの受信ピン
 
 // LEDオブジェクトの作成（信号の種類や色の並び順を設定）
 Adafruit_NeoPixel strip(numPixels, dataPin, NEO_GRB + NEO_KHZ800);
