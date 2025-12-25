@@ -36,9 +36,9 @@
 
 ### *システムデータフロー*
 
-1.  Arduino Uno R4 WiFi が超音波センサーで距離を読み取り、MIDI信号に変換してUSB経由で送信
+1.  Arduino Uno R4 WiFi が超音波センサーで距離を読み取り
 2.  Logic Pro が IAC Driver 経由でMIDI信号を受信し、ソフト音源を再生
-3.  Logic Proの音声出力 を PC内部の「見えないケーブル（BlackHole）」を通してProcessingへ送ります
+3.  Logic Proの音声出力 を PC内部の「見えないケーブル（BlackHole）」を通してへ送ります
 4.  Processing がFFT解析を行い、その情報を再びArduinoへ送り返してLEDを光らせます
 
 ## 3.  仕様書
@@ -74,13 +74,9 @@
 
 ### Arduino使用ライブラリ
 
-- **FastLED**(256個のLEDを高速かつ個別に制御するために使用しています)
+- **Adafruit_NeoPixel**
 
-### Processing使用ライブラリ
-
-- **Minim**(複雑な音波を周波数ごとに分解（FFT解析）するために使用しています。)
-- **TheMidiBus**(Processingを仮想的なMIDIキーボードとして動作させるために使用しています)
-- **processing.serial**(Arduinoとのシリアル通信用ライブラリ)
+### IntelliJ IDEA使用ライブラリ
 
 ## 4.  システムブロック図
 ![ブロック図](images_and_videos/mermaid-diagram-2025-12-22-172352.png)
@@ -169,5 +165,4 @@ Logic Proで再生された音をBlackHoleを使ってProcessingに取り込み�
 - [基本プロジェクト 超音波](https://docs.sunfounder.com/projects/elite-explorer-kit/ja/latest/basic_projects/06_basic_ultrasonic_sensor.html)
 - [【Arduino】シリアルLED（WS2812B）を制御する](https://araisun.com/arduino-serial-led.html)
 - [ArduinoでFFT解析し、ピークの周波数を検出する](https://qiita.com/ricelectric/items/98a6d32b1bcfca598762)
-- [arduinoとprocessingの連携手順](https://note.com/nakariho/n/n92611b3c0046)
 - [Audio MIDI設定ユーザガイド](https://support.apple.com/ja-jp/guide/audio-midi-setup/ams1013/mac)
