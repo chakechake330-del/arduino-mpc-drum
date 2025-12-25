@@ -178,31 +178,27 @@ flowchart TD
 
 ## 6.  使用ツールの詳細
 
-### 🔹**IntelliJ IDEA** 
+### 🔹 IntelliJ IDEA
+Javaを用いて、Arduinoから届くデータの解析や、Logic Proへ送るMIDI信号の生成、さらに音声をリアルタイムで分析するFFT処理など、システム全体の中心的な計算を行っています。
 
+### 🔹 BlackHole
+macOS用の仮想オーディオドライバです。通常、アプリの音声はスピーカーへ送られますが、BlackHoleを経由させることで、Logic Proの音声をリアルタイムでIntelliJに取り込むことができます。
 
-### 🔹**BlackHole**  
-BlackHoleは、macOS用の仮想オーディオドライバです。    
-通常、アプリの音声はスピーカーに直接送られますが、BlackHoleを使うことで、その音声を別のアプリ（この場合はIntelliJ）に受け渡すことができます。
-このプロジェクトでは、Logic Proで鳴った音をIntelliJに届ける“音の受け渡し役”としてBlackHoleを使用しています。
-
-### 🔹**Audio MIDI設定（IACドライバ）**（macOS標準機能）  
-macOS標準のMIDIルーティングツール。   
-ArduinoからのMIDIノートをLogic Proに送信するための仮想MIDIポートを作成します。
-
+### 🔹 Audio MIDI設定（IACドライバ）
+macOS標準のアプリとアプリをつなぐ「見えない演奏用ケーブル」です。IntelliJで生成した「ドレミ」などの演奏情報を、仮想MIDIポートを通じてLogic Proへ送信し、実際に楽器を鳴らすために使用しています。
 
 ## 7.  工夫ポイント
 
-### ◎*ArduinoとIntelliJのリアルタイムやりとり*  
-ArduinoとIntelliJの間で、
-Arduino → IntelliJ：距離センサーのデータを送信  
-IntelliJ → Arduino：LEDの表示データを送信  
-このように双方向でやり取りすることで、動きや音にすぐ反応する仕組みを実現しています。
+### ◎ ArduinoとIntelliJのリアルタイムやりとり
 
-### ◎*リアルタイムFFT解析*  
-Logic Proで再生された音をBlackHoleを使ってIntelliJに取り込み、 その場で周波数解析（FFT）を行います。  
-音の変化に応じて、LEDの光り方をすぐに変化させています。
+センサー（入力）とLED（出力）を同時に高速処理。  
+Arduinoは「距離を測る」と「光らせる」に専念させ、複雑な計算はPC（IntelliJ）に任せるという役割分担を徹底することで、  
+遅延のないスムーズな操作感を実現しました。
 
+### ◎ リアルタイムFFT解析
+
+単なる音量反応ではなく「音の高さ」を可視化。  
+Logic Proの音をBlackHoleでIntelliJに取り込み、その場で周波数解析（FFT）を行っています。  
 
 ## 8.  参考サイト
 
